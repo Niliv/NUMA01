@@ -32,7 +32,7 @@ def fast_approx_ln(x, n):
     # Initiliaze d matrix
     d = np.zeros((n+1, n+1)) 
 
-    
+
     for i in range(n+1):
         d[0][i] = a_i
         
@@ -40,6 +40,7 @@ def fast_approx_ln(x, n):
         for k in range(1,i+1):
             d[k][i] = (d[k-1][i] - 4**(-k) * d[k-1][i-1])/ (1 - 4**(-k))
 
+        
         # Update a and g
         a_next = (a_i+g_i)/2
         g_next = np.sqrt(a_next*g_i)
@@ -49,9 +50,8 @@ def fast_approx_ln(x, n):
 
     # Calculate approximation
     approx = (x-1)/d[n][n]
-
+    
     return approx
-
 
 
 # Task 2 & 3
@@ -70,6 +70,9 @@ def main(value, steps):
 
     abs_error = [abs(num) for num in dif]
 
+    # Plot all figures.
+    # One for the approximation and the true log value.
+    # One for the difference and one for the absolute error
     plt.figure(1)
     plt.plot(range(steps), real_values, color='red')
     plt.plot(range(steps), approx_values, color='b')
@@ -94,33 +97,36 @@ def main(value, steps):
     plt.grid(True)
     plt.show()
 
+
 # Task 5
 def scatter_plot():
     values = np.linspace(0, 20, 10000)
     
-    
     for n in range(2,7):
-        error = [np.log(abs(fast_approx_ln(value, n) - np.log(value))) for value in values]
+        
+        # Calculate the error of the fast_approx_ln function. 
+        # This is done for 10 000 values between 0 and 20.
+        error = [abs(fast_approx_ln(value, n) - np.log(value)) for value in values]
+        
         plt.scatter(values, error, s=4, label= "iterarion" + str(n))
     
-    
+    # Plot the error behaviour
     plt.title("Error behaviour of the accelerated Carlsson method for log")
     plt.ylabel("error")
     plt.xlabel("x")
     plt.legend()
+    plt.yscale('log')
+    plt.ylim(10**(-19), 10**(-5))
     plt.show()
-    
-
-
-    
+     
         
 if __name__ == "__main__":
     
+    # Some arguments for easier dubugging and testing
     parser = argparse.ArgumentParser(description="Values for approximation")
     parser.add_argument("--v", type=float, default=10, help="Number to approximate")
     parser.add_argument("--n", type=int, default=10, help="Number of steps")
     
     args = parser.parse_args()
-    #main(args.v, args.n)
-    #print(fast_approx_ln(args.v, args.n))
-    scatter_plot()
+    #main(args.v, args.n) #Task 1&2&3
+    scatter_plot() # Task 4&5
