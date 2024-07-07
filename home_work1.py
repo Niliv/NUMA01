@@ -9,7 +9,7 @@ def approx_ln(x, n):
     a_i = (1+x)/2        
     g_i = np.sqrt(x)     
 
-    # Update values fo each step
+    # Update values for each step
     for i in range(n):
         a_next = (a_i+g_i)/2
         g_next = np.sqrt(a_next*g_i)
@@ -23,32 +23,38 @@ def approx_ln(x, n):
     return approx
 
 
+# Task 4
 def fast_approx_ln(x, n):
-
+    # Initiliaze a0 and g0
     a_i = (1+x)/2        
-    g_i = np.sqrt(x)  
+    g_i = np.sqrt(x)
+    
+    # Initiliaze d matrix
+    d = np.zeros((n+1, n+1)) 
 
-    d_i = 0
-    d_k_next = 0
-    for i in range(n):
-        d_i = a_i
+    
+    for i in range(n+1):
+        d[0][i] = a_i
+        
+        # Calcualte d
+        for k in range(1,i+1):
+            d[k][i] = (d[k-1][i] - 4**(-k) * d[k-1][i-1])/ (1 - 4**(-k))
+
+        # Update a and g
         a_next = (a_i+g_i)/2
         g_next = np.sqrt(a_next*g_i)
 
         a_i = a_next
         g_i = g_next
 
-        for k in range(1, i):
-            d_k_next = (d_i - 4^(-k) * d_i_prev) / (1-4^(-k))
-            
-
-
-    approx = 
+    # Calculate approximation
+    approx = (x-1)/d[n][n]
 
     return approx
-    
 
 
+
+# Task 2 & 3
 def main(value, steps):
  
     real_values = []
@@ -88,6 +94,23 @@ def main(value, steps):
     plt.grid(True)
     plt.show()
 
+# Task 5
+def scatter_plot():
+    values = np.linspace(0, 20, 10000)
+    
+    
+    for n in range(2,7):
+        error = [np.log(abs(fast_approx_ln(value, n) - np.log(value))) for value in values]
+        plt.scatter(values, error, s=4, label= "iterarion" + str(n))
+    
+    
+    plt.title("Error behaviour of the accelerated Carlsson method for log")
+    plt.ylabel("error")
+    plt.xlabel("x")
+    plt.legend()
+    plt.show()
+    
+
 
     
         
@@ -98,4 +121,6 @@ if __name__ == "__main__":
     parser.add_argument("--n", type=int, default=10, help="Number of steps")
     
     args = parser.parse_args()
-    main(args.v, args.n)
+    #main(args.v, args.n)
+    #print(fast_approx_ln(args.v, args.n))
+    scatter_plot()
