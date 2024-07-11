@@ -18,7 +18,7 @@ def approx_ln(x, n):
         g_i = g_next
 
     # Calculate approximation
-    approx = (x-1)/g_i
+    approx = (x-1)/a_i
 
     return approx
 
