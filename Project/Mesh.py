@@ -5,16 +5,18 @@ class Mesh():
     def __init__(self, *args):
         self.mesh = (args[0], args[1])
 
-    
+    #[1, 2, 3]
 
     def jacobian(self, element):
         cords, elem = self.mesh
-        element = (element - 1) * 3
-        n11 = cords[0][element + 1] - cords[0][element]
-        n12 = cords[0][element + 2] - cords[0][element]
+        
+        e1, e2, e3 = element
 
-        n21 = cords[1][element + 1] - cords[1][element]
-        n22 = cords[1][element + 2] - cords[1][element]
+        n11 = cords[0][e2-1] - cords[0][e1-1]
+        n12 = cords[0][e3-1] - cords[0][e1-1]
+    
+        n21 = cords[1][e2-1] - cords[1][e1-1]
+        n22 = cords[1][e3-1] - cords[1][e1-1]
         
         
 
@@ -22,7 +24,7 @@ class Mesh():
 
         
 
-    def determinant(self,element):
+    def determinant(self, element):
 
         J = self.jacobian(element)
 
@@ -30,7 +32,28 @@ class Mesh():
     
 
 
-    
+    def minAngle(self, element):
+        cords, elem = self.mesh
+        
+        #[1,2,3]
+        e1, e2, e3 = element
+        x1 = cords[0][e1 -1]
+        x2 = cords[0][e2 -1]
+        x3 = cords[0][e3 -1]
+
+        y1 = cords[1][e1 -1]
+        y2 = cords[1][e2 -1]
+        y3 = cords[1][e3 -1]
+
+        # a = 1-2
+        # b = 2-3
+        # c = 3-1
+
+         
+        # A = cos-1(b^2+c^2-a^2 /2bc)
+        # B = cos-1(a^2+c^2-b^2 /2ac)
+        # C = cos-1(a^2+b^2-c^2 /2ab)
+
 
 
 

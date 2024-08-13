@@ -19,8 +19,17 @@ def readElem(filepath):
         ys = [float(num) for num in ys.split()]
         zs = [float(num) for num in zs.split()]
 
-        return [xs, ys, zs]
+        
+    elems = []
 
+    for i in range(len(xs)):
+        elems.append([xs[i], ys[i], zs[i]])
+
+    # xs[0] ys[0] zs[0]
+    # xs[1] ys[1] zs[1]
+    # ....
+    # xs[n] ys[n] zs[n]
+    return elems
 
 
 if __name__ == "__main__":
@@ -28,6 +37,6 @@ if __name__ == "__main__":
     elem = readElem("./meshes/elementnode1.txt")
     mesh = m.Mesh(cords, elem)
 
-    print(mesh.determinant(8))
+    print(mesh.determinant())
     
     
