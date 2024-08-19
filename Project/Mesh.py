@@ -70,7 +70,7 @@ class Mesh():
         determinants = []
         for elem in self.mesh[1]:
             if self.__minAngle__(elem) <= 0:
-                raise ValueError("To small of an angle")
+                raise Exception("To small of an angle")
             determinants.append(self.__determinant__(elem))
         
         return determinants
