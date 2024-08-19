@@ -1,13 +1,65 @@
 import numpy as np
+import math
+import matplotlib.pyplot as plt
+import Point as point
 
 class Mesh():
 
     def __init__(self, *args):
         self.mesh = (args[0], args[1])
+        self.determinants = self._CalcDeterminants()
 
-    #[1, 2, 3]
 
-    def jacobian(self, element):
+    def draw(self):
+        cords, elements = self.mesh
+
+        radi = 0.05
+        for elem in elements:
+            e1, e2, e3 = elem
+
+
+            p1 = point.Point(cords[0][e1 -1], cords[1][e1 -1])
+            p2 = point.Point(cords[0][e2 -1], cords[1][e2 -1])
+            p3 = point.Point(cords[0][e3 -1], cords[1][e3 -1])
+
+            
+            
+            
+        
+
+        plt.show()
+
+
+    def _CalcDeterminants(self):
+        determinants = []
+        for elem in self.mesh[1]:
+            if self._minAngle(elem) <= 0:
+                raise ValueError("To small of an angle")
+            determinants.append(self._determinant(elem))
+        
+        return determinants
+            
+
+    def _minAngle(self, element):
+        cords, elem = self.mesh
+        
+        e1, e2, e3 = element
+
+        p1 = (cords[0][e1 -1], cords[1][e1 -1])
+        p2 = (cords[0][e2 -1], cords[1][e2 -1])
+        p3 = (cords[0][e3 -1], cords[1][e3 -1])
+
+        a = self._sideLength(p1, p2)
+        b = self._sideLength(p2, p3)
+        c = self._sideLength(p3, p1)
+
+        A = self._calcAngle(a, b, c)
+        B = self._calcAngle(b, a, c)
+        C = self._calcAngle(c, a, b)
+   
+        return min(A,B,C)
+
+    def _jacobian(self, element):
         cords, elem = self.mesh
         
         e1, e2, e3 = element
@@ -17,43 +69,25 @@ class Mesh():
     
         n21 = cords[1][e2-1] - cords[1][e1-1]
         n22 = cords[1][e3-1] - cords[1][e1-1]
-        
-        
 
         return [[n11,n12], [n21, n22]]
 
         
 
-    def determinant(self, element):
+    def _determinant(self, element):
 
-        J = self.jacobian(element)
+        J = self._jacobian(element)
 
         return J[0][0] * J[1][1] - J[0][1] * J[1][0]
     
 
-
-    def minAngle(self, element):
-        cords, elem = self.mesh
-        
-        #[1,2,3]
-        e1, e2, e3 = element
-        x1 = cords[0][e1 -1]
-        x2 = cords[0][e2 -1]
-        x3 = cords[0][e3 -1]
-
-        y1 = cords[1][e1 -1]
-        y2 = cords[1][e2 -1]
-        y3 = cords[1][e3 -1]
-
-        # a = 1-2
-        # b = 2-3
-        # c = 3-1
-
-         
-        # A = cos-1(b^2+c^2-a^2 /2bc)
-        # B = cos-1(a^2+c^2-b^2 /2ac)
-        # C = cos-1(a^2+b^2-c^2 /2ab)
+  
 
 
+    def _calcAngle(self, a, b, c):
+        return math.degrees(math.acos((b**2 + c**2 - a**2) / (2 * b * c)))
+    
 
+    def _sideLength(self, p1, p2):
+        return math.sqrt((p2[0] - p1[0])**2 + (p2[1] - p1[1])**2)
 
